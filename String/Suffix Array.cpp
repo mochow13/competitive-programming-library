@@ -2,11 +2,11 @@
 
 using namespace std;
 
-// sa[i] -> ith smallest suffix of the string (indexed from 0)
-// height[i] -> Longest common substring between Suffix(i) and Suffix(i-1), indexed
+// sa[i] -> ith smallest suffix of the string (indexed from 1)
+// height[i] -> Longest common substring between Suffix(sa[i]) and Suffix(sa[i-1]), indexed
 // from i=2.
-// rak[i] -> The position of i th index of the main string in height array.
-// 0 or 1 based ranking (check)
+// rak[i] -> The position of i th index of the main string in suffix array.
+// rak[6]=1 means 6th suffix is in 1st position in sa
 
 const int N = 2e6+5;
 int wa[N],wb[N],wv[N],wc[N];
@@ -70,6 +70,31 @@ int askRMQ(int L,int R)
 
 int main()
 {
+      string s; cin>>s;
+      int n=s.size(), cnt=0;
+
+      FOR(i,0,s.size())
+      {
+            r[i]=s[i]-'a'+1;
+            // prnt(r[i]);
+            cnt=max(cnt,r[i]);
+      }
+
+      r[n]=0;
+      da(r,sa,n+1,cnt+1); // cnt+1 is must
+      calheight(r,sa,n);
+
+      for(int i=1; i<=n; i++)
+            printf("sa[%d] = %d\n", i, sa[i]);
+
+      for(int i=2; i<=n; i++)
+            printf("height[%d] = %d\n", i, height[i]);
+
+      for(int i=1; i<=n; i++)
+            printf("rank[%d] = %d\n", sa[i], rak[sa[i]]);
+
+      // To find lcp between any two suffix i and j, call askRMQ(L+1,R)
+      // where L=min(rak[i],rak[j]), R=max(rak[i],rak[j]).
 
 	return 0;
 }

@@ -11,7 +11,20 @@ int Block, cnt[1000004];
 ll ans=0;
 ll Ans[2*MAX];
 
-inline bool comp(info a, info b)
+// always constant
+// Farther improvement: When dividing the elements into blocks, we may sort the first block in the 
+// ascending order of right borders, the second — in descending, the third — in ascending order again, and so on.
+
+// inline bool comp(const info &a, const info &b)
+// {
+//     if(a.l/blockSZ!=b.l/blockSZ)
+//         return a.l<b.l;
+//     if((a.l/blockSZ)&1)
+//         return a.r<b.r;
+//     return a.r>b.r;
+// }
+
+inline bool comp(const info &a, const info &b)
 {
 	if(a.l/Block==b.l/Block) return a.r<b.r;
 	return a.l<b.l;
