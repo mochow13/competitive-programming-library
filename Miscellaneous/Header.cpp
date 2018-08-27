@@ -121,8 +121,6 @@ int main()
 
     int test, cases=1;
 
-    
-
     return 0;
 }
 

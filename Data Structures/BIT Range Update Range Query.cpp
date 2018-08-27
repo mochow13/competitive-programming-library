@@ -2,7 +2,7 @@ class BITrangeOperations
 {
 public:
 
-	ll Tree[MAX][2];
+	ll Tree[MAX+7][2];
 
 	void update(int idx, ll x, bool t)
 	{

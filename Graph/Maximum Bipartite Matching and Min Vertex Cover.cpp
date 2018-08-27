@@ -74,3 +74,31 @@ void findMinVertexCover()
 		if(!(!visited[0][i] || visited[1][i])) mis.pb(i);
 	}
 }
+// The following probably optimizes for large graphs
+bool trymatch(int u)
+{
+	// tag is used so that we don't clear seen each time
+	if(seen[u]==tag) return false;
+	seen[u]=tag;
+	FOR(j,0,bp[u].size())
+	{
+		int v=bp[u][j];
+		// first we only consider any matched[v]==-1 case
+		if(matched[v]<0)
+		{
+			matched[v]=u;
+			return true;
+		}
+	}
+	FOR(j,0,bp[u].size())
+	{
+		int v=bp[u][j];
+		// Now we go deeper and call trymatch
+		if(trymatch(matched[v]))
+		{
+			matched[v]=u;
+			return true;
+		}
+	}
+	return false;
+}

@@ -1,7 +1,3 @@
-#include <bits/stdc++.h>
-
-using namespace std;
-
 // sa[i] -> ith smallest suffix of the string (indexed from 1)
 // height[i] -> Longest common substring between Suffix(sa[i]) and Suffix(sa[i-1]), indexed
 // from i=2.
@@ -10,7 +6,7 @@ using namespace std;
 
 const int N = 2e6+5;
 int wa[N],wb[N],wv[N],wc[N];
-int r[N],sa[N],rak[N], height[N];
+int r[N],sa[N],rak[N], height[N], lg[N];
 
 int cmp(int *r,int a,int b,int l)
 {
@@ -61,11 +57,22 @@ void initRMQ(int n)
       }
  
 }
+
 int askRMQ(int L,int R)
 {
-      int k = 0;
-      while((1<<(k+1)) <= R-L+1) k++;
+      int k = lg[R-L+1];
+      // int k=0;
+      // while((1<<(k+1)) <= R-L+1) k++;
       return min(dp[L][k], dp[R - (1<<k) + 1][k]);
+}
+// Precalculate powers of two to answer askRMQ in O(1)
+int preclg2()
+{
+      for(int i=2; i<N; i++)
+      {
+            lg[i]=lg[i-1];
+            if((i&(i-1))==0) lg[i]++;
+      }
 }
 
 int main()
@@ -93,8 +100,9 @@ int main()
       for(int i=1; i<=n; i++)
             printf("rank[%d] = %d\n", sa[i], rak[sa[i]]);
 
+      // Must call initRMQ(len)
       // To find lcp between any two suffix i and j, call askRMQ(L+1,R)
-      // where L=min(rak[i],rak[j]), R=max(rak[i],rak[j]).
+      // where L=min(rak[sa[i]],rak[sa[j]]), R=max(rak[sa[i]],rak[sa[j]]).
 
 	return 0;
 }

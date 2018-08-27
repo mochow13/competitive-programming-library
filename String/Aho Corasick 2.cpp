@@ -1,7 +1,7 @@
 int n;
 string s, p[MAX];
 map<char, int> node[MAX];
-int root, nnode, link[MAX], occ[MAX];
+int root, nnode, link[MAX];
 vi ending[MAX], exist[MAX];
 // exist[i] has all the ending occurrences of the input strings
 void insertword(int idx)

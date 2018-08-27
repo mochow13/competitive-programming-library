@@ -1,4 +1,5 @@
-const int mod=786433;
+const ll mod=786433;
+
 vi getdivs(int p)
 {
 	int q=p-1;

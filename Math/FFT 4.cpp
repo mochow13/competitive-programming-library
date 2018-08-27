@@ -4,12 +4,10 @@
 // Note:
 // - a[2] will have size <= 2*n
 // - When rounding, careful with negative numbers:
-
 int my_round(double x) {
 	if (x < 0) return -my_round(-x);
 	return (int) (x + 1e-3);
 }
-
 const int N = 1 << 18;
 typedef complex<long double> cplex; // may need long double
 int rev[N];
@@ -39,21 +37,17 @@ void fft(cplex a[], int n, bool invert) {
 
 	if (invert) FOR(i, 0, n) a[i] /= n;
 }
-
 void calcRev(int n, int logn) {
 	FOR(i, 0, n) {
 		rev[i] = 0;
 		FOR(j, 0, logn) if (i & (1 << j)) rev[i] |= 1 << (logn - 1 - j);
 	}
 }
-
 void mulpoly(int a[], int b[], ll c[], int na, int nb, int &n) {
 	int l = max(na, nb), logn = 0;
 	for (n = 1; n < l; n <<= 1) ++logn;
 	n <<= 1; ++logn;
 	calcRev(n, logn);
-
-	// cout<<n<<" "<<logn<<endl;
 
 	FOR(i, 0, n) fa[i] = fb[i] = cplex(0);
 	FOR(i, 0, na) fa[i] = cplex(a[i]);
@@ -64,7 +58,7 @@ void mulpoly(int a[], int b[], ll c[], int na, int nb, int &n) {
 
 	FOR(i, 0, n) fa[i] *= fb[i];
 	fft(fa, n, true);
-
+	// if everything is double/long double, we don't add 0.5
 	FOR(i, 0, n) c[i] = (ll)(fa[i].real() + 0.5);
 }
 // call mulpoly(first_poly,second_poly,output,size_first,size_second,size_output)
