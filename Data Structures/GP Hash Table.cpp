@@ -27,13 +27,12 @@ unsigned hash_f(unsigned x) {
     x = (x >> 16) ^ x;
     return x;
 }
-// Do we need this hash_combine? Don't know :/
-unsigned hash_combine(unsigned a, unsigned b) { return a * 31 + b; }
 struct chash {
-    int operator()(int x) const { return hash_f(x); }
+    int operator()(ll x) const { return hash_f(x); }
 };
 gp_hash_table<ll, int, chash> table[N][N]; 
 // so table[i][j][k] is storing an integer for corresponding k as hash
+unsigned hash_combine(unsigned a, unsigned b) { return a * 31 + b; }
 
 // For pairs
 // The better the hash function, the less collisions

@@ -20,6 +20,9 @@ int bit_search(int v)
 
 void update(int idx, ll x)
 {
+	// Let, n is the number of elements and our queries are
+	// of the form query(n)-query(l-1), i.e range queries
+	// Then, we should never put N or MAX in place of n here.
 	while(idx<=n)
 	{
 		Tree[idx]+=x;

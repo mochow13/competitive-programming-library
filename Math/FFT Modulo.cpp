@@ -1,7 +1,9 @@
+// Caution: Got TLE in divide and conquer + FFT problem
+
 template<class T, class T2> inline void chkmax(T &x, const T2 &y) { if (x < y) x = y; }
 template<class T, class T2> inline void chkmin(T &x, const T2 &y) { if (x > y) x = y; }
 const int MAXN = (1 << 19);
-int mod;
+int mod=1009;
 
 inline void addmod(int& x, int y, int mod) { (x += y) >= mod && (x -= mod); }
 inline int mulmod(int x, int y, int mod) { return x * 1ll * y % mod; }
