@@ -24,7 +24,7 @@ int lca(int u, int v)
 	       table[l][g] : table[r - (1 << g) + 1][g];
 }
 
-void build(int n)
+void build()
 {
 	dfs(1, -1, 0);
 

@@ -121,6 +121,9 @@ struct MagicComponents {
 			for (const edge& e : adj[i]) {
 				if (!vis[e.id] && map[e.v] < map[e.u]) {
 					vis[e.id] = true;
+					// This is an edge in the bridge tree
+					// we can add this edge to a new graph[] and this will
+					// be our new tree. We can now do operations on this tree
 					g.add_edge(map[e.v], map[e.u]);
 				}
 			}

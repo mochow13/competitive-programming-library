@@ -1,6 +1,6 @@
 // This gave AC for CF 813D Two Melodies but the other one was TLE
 // By sgtlaugh
-
+// flow[i] contains the amount of flow in i-th edge
 namespace mcmf{
     const int MAX = 1000010;
     const int INF = 1 << 25;
@@ -42,7 +42,8 @@ namespace mcmf{
         }
         return (dis[t] != INF);
     }
-
+    // we can return all the flow values for each edge from this function
+    // vi solve() 
     pair <int, int> solve(){
         int i, j;
         int mincost = 0, maxflow = 0;
@@ -57,6 +58,10 @@ namespace mcmf{
             }
             maxflow += aug, mincost += aug * dis[t];
         }
+        // edges are indexed from 0 to m
+        // vi ret(flow,flow+m)
+        // to find flow of a specific edge, we just noticed that flow[2*i] contains
+        // the flow amount in i-th edge
         return make_pair(mincost, maxflow);
     }
 }
