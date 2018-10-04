@@ -87,7 +87,7 @@ int main()
             cnt=max(cnt,r[i]);
       }
 
-      r[n]=0;
+      r[n]=0; // This is very important, if there are testacases!
       da(r,sa,n+1,cnt+1); // cnt+1 is must
       calheight(r,sa,n);
 
@@ -103,6 +103,11 @@ int main()
       // Must call initRMQ(len)
       // To find lcp between any two suffix i and j, call askRMQ(L+1,R)
       // where L=min(rak[sa[i]],rak[sa[j]]), R=max(rak[sa[i]],rak[sa[j]]).
+
+      /* A Reminder: Sometimes when we concatenate strings, we do that by adding
+      separators. We might need to add same separator or different separators.
+      And it might also need to add a separator at the end of the total strings.
+      */
 
 	return 0;
 }

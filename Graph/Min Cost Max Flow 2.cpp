@@ -18,6 +18,7 @@ struct MinCostFlow{
     long long flow, cost;
     vector<vector<int> > graph;
     vector<Edge> e;
+    // if cost is double, dist should be double
     vector<long long> dist;
     vector<int> parent;
  

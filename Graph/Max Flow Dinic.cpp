@@ -1,14 +1,17 @@
 /*
-Feasible flow in network with upper + lower constraint, no source, no sink:
-cap' = upper bound - lower bound.
-Add source s, sink t.
-Let M[v] = (sum of lowerbounds of ingoing edges to v) - (sum of lower bounds of outgoing edges from v).
-For all v, if M[v] > 0, add (s, v, M), else add (v, t, -M).
-If all outgoing edges from S are full --> feasible flow exists, it is flow + lower bounds.
-
-Max flow with both upper + lower constraints, source s, sink t: add edge (t, s, +INF).
-Binary search lower bound, check whether feasible flow exists WITHOUT source / sink
-
+Add s', t', s, t to the graph. For edges with lower bound L and upper
+bound R, replace the edge with capacity R-L.
+Let, sum[u] = (sum of lowerbounds of ingoing edges to u) - (sum of lowerbounds of
+				outgoing edges from u), 
+here u can be all nodes of the graph, including s and t. For all such u, if sum[u]>0
+add edge (s',u,sum[u]), add sum[u] to a value 'total', otherwise add edge (u,t',-sum[u]). 
+Lastly add (t,s,INF). Then run max-flow from s' to t'.
+A feasible flow won't exist if flow from s' to t' < total, otherwise
+if we run a maxflow from s to t (not s' to t'), we get the max-flow satisfying the bounds.
+***
+To find the minimal flow satisfying the bounds, we do a binary search on the
+capacity of the edge (t,s,INF). Each time during binary search, we check if a feasible
+flow exists or not with current capacity of (t,s,INF) edge.
 */
 
 struct Edge
