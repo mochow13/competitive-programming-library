@@ -3,7 +3,7 @@ bool bellman(int src)
 {
     // Nodes are indexed from 1
 	for (int i = 1; i <= n; i++) 
-		dist[i]   = INF; 
+		dist[i] = INF; 
 	dist[src] = 0; 
     for(int i = 2; i <= n; i++) 
     { 
@@ -20,9 +20,10 @@ bool bellman(int src)
     { 
 		int u = edges[i].first; 
 		int v = edges[i].second; 
-		ll weight = adj[u][v]; 
+		ll weight = adj[u][v];
+        // True if neg-cylce exists
 		if (dist[u]!=INF && dist[u] + weight < dist[v]) 
-			return false;
+			return true;
     }
-	return true;
+	return false;
 }

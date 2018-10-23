@@ -64,11 +64,11 @@ void inv_fft(complex_base *a, int lg)
 
 complex_base A[MAXN], B[MAXN];
 
-vector<int> mult(vector<int> a, vector<int> b)
+vector<ll> mult(vector<ll> a, vector<ll> b)
 {
     if (a.size() * b.size() <= 256)
     {
-        vector<int> ans(a.size() + b.size(), 0);
+        vector<ll> ans(a.size() + b.size(), 0);
         for (int i = 0; i < (int)a.size(); i++)
             for (int j = 0; j < (int)b.size(); j++)
                 ans[i + j] += a[i] * b[j];
@@ -86,7 +86,7 @@ vector<int> mult(vector<int> a, vector<int> b)
         A[i] = A[i] * B[i];
     inv_fft(A, lg);
 
-    vector<int> ans(a.size() + b.size(), 0);
+    vector<ll> ans(a.size() + b.size(), 0);
     for (int i = 0; i < (int)ans.size(); i++)
         ans[i] = (int)(A[i].x + 0.5);
 

@@ -1,3 +1,4 @@
+// Caution: bad precision!
 /* To multiply two polynomials a and b, do the following:
 sz = power of 2 > n+m, where n = size(a), m = size(b)
 a.assign(sz,CD(0,0)); b.assign(sz,CD(0,0));

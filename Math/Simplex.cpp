@@ -79,22 +79,20 @@ long Simplex( long m,long n,double A[MAX+7][MAX+7],double *b,double &Ret )
     }
 }
 
+// Caution: long double can give TLE
+typedef long double ld;
+typedef vector<ld> vd;
+typedef vector<vd> vvd;
 
-
-typedef long double DOUBLE;
-typedef vector<DOUBLE> VD;
-typedef vector<VD> VVD;
-typedef vector<int> VI;
-
-const DOUBLE EPS = 1e-9;
+const ld EPS = 1e-10;
 
 struct LPSolver {
   int m, n;
-  VI B, N;
-  VVD D;
+  vi B, N;
+  vvd D;
 
-  LPSolver(const VVD &A, const VD &b, const VD &c) :
-    m(b.size()), n(c.size()), N(n + 1), B(m), D(m + 2, VD(n + 2)) {
+  LPSolver(const vvd &A, const vd &b, const vd &c) :
+    m(b.size()), n(c.size()), N(n + 1), B(m), D(m + 2, vd(n + 2)) {
     for (int i = 0; i < m; i++) for (int j = 0; j < n; j++) D[i][j] = A[i][j];
     for (int i = 0; i < m; i++) { B[i] = n + i; D[i][n] = -1; D[i][n + 1] = b[i]; }
     for (int j = 0; j < n; j++) { N[j] = j; D[m][j] = -c[j]; }
@@ -102,10 +100,10 @@ struct LPSolver {
   }
 
   void Pivot(int r, int s) {
-    double inv = 1.0 / D[r][s];
+    ld inv = 1.0 / D[r][s];
     for (int i = 0; i < m + 2; i++) if (i != r)
-      for (int j = 0; j < n + 2; j++) if (j != s)
-        D[i][j] -= D[r][j] * D[i][s] * inv;
+        for (int j = 0; j < n + 2; j++) if (j != s)
+            D[i][j] -= D[r][j] * D[i][s] * inv;
     for (int j = 0; j < n + 2; j++) if (j != s) D[r][j] *= inv;
     for (int i = 0; i < m + 2; i++) if (i != r) D[i][s] *= -inv;
     D[r][s] = inv;
@@ -125,54 +123,62 @@ struct LPSolver {
       for (int i = 0; i < m; i++) {
         if (D[i][s] < EPS) continue;
         if (r == -1 || D[i][n + 1] / D[i][s] < D[r][n + 1] / D[r][s] ||
-          (D[i][n + 1] / D[i][s]) == (D[r][n + 1] / D[r][s]) && B[i] < B[r]) r = i;
+                (D[i][n + 1] / D[i][s]) == (D[r][n + 1] / D[r][s]) && B[i] < B[r]) r = i;
       }
       if (r == -1) return false;
       Pivot(r, s);
     }
   }
 
-  DOUBLE Solve(VD &x) {
+  ld Solve(vd &x) {
     int r = 0;
     for (int i = 1; i < m; i++) if (D[i][n + 1] < D[r][n + 1]) r = i;
     if (D[r][n + 1] < -EPS) {
       Pivot(r, n);
-      if (!Simplex(1) || D[m + 1][n + 1] < -EPS) return -numeric_limits<DOUBLE>::infinity();
+      if (!Simplex(1) || D[m + 1][n + 1] < -EPS) return -numeric_limits<ld>::infinity();
       for (int i = 0; i < m; i++) if (B[i] == -1) {
-        int s = -1;
-        for (int j = 0; j <= n; j++)
-          if (s == -1 || D[i][j] < D[i][s] || D[i][j] == D[i][s] && N[j] < N[s]) s = j;
-        Pivot(i, s);
-      }
+          int s = -1;
+          for (int j = 0; j <= n; j++)
+            if (s == -1 || D[i][j] < D[i][s] || D[i][j] == D[i][s] && N[j] < N[s]) s = j;
+          Pivot(i, s);
+        }
     }
-    if (!Simplex(2)) return numeric_limits<DOUBLE>::infinity();
-    x = VD(n);
+    if (!Simplex(2)) return numeric_limits<ld>::infinity();
+    x = vd(n);
     for (int i = 0; i < m; i++) if (B[i] < n) x[B[i]] = D[i][n + 1];
     return D[m][n + 1];
   }
 };
 
+/* Equations are of the matrix form Ax<=b, and we want to maximize
+the function c. We are given coeffs of A, b and c. In case of minimizing, 
+we negate the coeffs of c and maximize it. Then the negative of returned 
+'value' is the answer.
+All the constraints should be in <= form. So we may need to negate the 
+coeffs.
+*/
+
 int main() {
 
   const int m = 4;
   const int n = 3;
-  DOUBLE _A[m][n] = {
+  ld _A[m][n] = {
     { 6, -1, 0 },
     { -1, -5, 0 },
     { 1, 5, 1 },
     { -1, -5, -1 }
   };
-  DOUBLE _b[m] = { 10, -4, 5, -5 };
-  DOUBLE _c[n] = { 1, -1, 0 };
+  ld _b[m] = { 10, -4, 5, -5 };
+  ld _c[n] = { 1, -1, 0 };
 
-  VVD A(m);
-  VD b(_b, _b + m);
-  VD c(_c, _c + n);
-  for (int i = 0; i < m; i++) A[i] = VD(_A[i], _A[i] + n);
+  vvd A(m);
+  vd b(_b, _b + m);
+  vd c(_c, _c + n);
+  for (int i = 0; i < m; i++) A[i] = vd(_A[i], _A[i] + n);
 
   LPSolver solver(A, b, c);
-  VD x;
-  DOUBLE value = solver.Solve(x);
+  vd x;
+  ld value = solver.Solve(x);
 
   cerr << "VALUE: " << value << endl; // VALUE: 1.29032
   cerr << "SOLUTION:"; // SOLUTION: 1.74194 0.451613 1
