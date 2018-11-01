@@ -112,6 +112,87 @@ inline ll power(ll a, ll b)
 
 /****** END OF HEADER ******/
 
+const int N = 3e5+7;
+const int ALPHA = 26;
+
+class ahoCorasick
+{
+    int root = 0, nnode = 0;
+    int node[N][ALPHA], link[N], cnt[N];
+
+    void init()
+    {
+        root = ++nnode;
+        ms(node[root],0);
+    }
+
+    void insertword(string &s)
+    {
+        int len = s.size();
+        int now = root;
+
+        FOR(i,0,len)
+        {
+            int nxt = s[i]-'a';
+
+            if(!node[now][nxt])
+            {
+                node[now][nxt] = ++nnode;
+                ms(node[nnode],0);
+                cnt[nnode]=0;
+            }
+            now=node[now][nxt];
+        }
+        cnt[now]++; // an occurrence of a string happened in 'now'
+    }
+
+    void insertdict(vector<string> &dict)
+    {
+        for(auto it: dict)
+            insertword(it);
+    }
+
+    void pushLinks()
+    {
+        queue<int> Q; link[root]=-1;
+        Q.push(root);
+
+        while(!Q.empty())
+        {
+            int u = Q.front(); Q.pop();
+
+            for(int i=0; i<ALPHA; i++)
+            {
+                if(!node[u][i]) continue;
+                int v = node[u][i];
+                int l = link[u];
+
+                while(l!=-1 && !node[l][i]) l = link[l];
+
+                if(l!=-1) link[v] = node[l][i];
+                else link[v] = 0;
+
+                cnt[v]+=cnt[link[v]];
+                Q.push(v);
+            }
+        }
+    }
+
+    int query(string &p)
+    {
+        int u = root, ret = 0;
+
+        for(char ch: p)
+        {
+            int nxt = ch-'a';
+            while(u!=-1 && !node[u][nxt]) u = link[u];
+            if(u==-1) u = 0;
+            else u = node[u][nxt];
+            ret+=cnt[u];
+        }
+        return ret;
+    }
+};
 
 int main()
 {

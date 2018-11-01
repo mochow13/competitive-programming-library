@@ -88,7 +88,7 @@ int main()
       }
 
       r[n]=0; // This is very important, if there are testacases!
-      da(r,sa,n+1,cnt+1); // cnt+1 is must
+      da(r,sa,n+1,cnt+1); // cnt+1 is must, cnt=max of r[i]
       calheight(r,sa,n);
 
       for(int i=1; i<=n; i++)

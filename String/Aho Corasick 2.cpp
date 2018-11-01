@@ -48,6 +48,7 @@ void push_links()
 			char ch = it->first;
 			int v = it->second;
 			int j = link[u];
+	        // use map.find()
 			while (j != -1 && !node[j][ch])
 				j = link[j];
 			if (j != -1)link[v] = node[j][ch];
@@ -64,6 +65,7 @@ void traverse()
 	int now = root;
 	FOR(i, 0, len)
 	{
+        // use map.find()
 		while (now != -1 && !node[now][s[i]])
 			now = link[now];
 		if (now != -1) now = node[now][s[i]];

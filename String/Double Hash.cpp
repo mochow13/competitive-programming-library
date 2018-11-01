@@ -46,6 +46,8 @@ struct Hash {
             ret2 = h2[j];
         }
         else {
+            // Note: may need to do modinverse
+            // in that case, precalc inv1[] and inv2[]
             ret1 = (h1[j] - h1[i - 1]) % mod1;
             if (ret1 < 0) ret1 += mod1;
             ret2 = (h2[j] - h2[i - 1]) % mod2;

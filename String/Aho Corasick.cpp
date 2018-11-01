@@ -3,7 +3,7 @@ string s,p;  // dictionary words are inputted in p, s is the traversed text
 
 #define MAX_NODE 250004
 
-map<char,int> node[MAX_NODE];
+map<char,int> node[MAX_NODE]; // use 2d array maybe?
 int root, nnode, link[MAX_NODE], endof[504], travis[MAX_NODE];
 pii level[MAX_NODE];
 
@@ -23,6 +23,7 @@ void insertword(int idx)
 
     FOR(i,0,len)
     {
+        // use map.find()
         if(!node[now][p[i]])
         {
             node[now][p[i]]=++nnode;
@@ -55,6 +56,7 @@ void push_links()
             int v=it->second;
             int j=link[u];
 
+            // use map.find()
             while(j!=-1 && !node[j][ch])
                 j=link[j];
 
@@ -75,6 +77,7 @@ void traverse()
 
     FOR(i,0,len)
     {
+        // use map.find()
         while(now!=-1 && !node[now][s[i]])
             now=link[now];
 

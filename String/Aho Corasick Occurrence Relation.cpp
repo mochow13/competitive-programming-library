@@ -76,7 +76,7 @@ void push_links()
 
             int v=node[u][i];
             int j=link[u];
-
+            // use map.find()
             while(j!=-1 && !node[j][i])
             	j=link[j];
 
