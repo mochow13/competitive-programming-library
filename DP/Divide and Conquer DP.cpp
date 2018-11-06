@@ -30,7 +30,7 @@ void compute(int i, int L, int R, int optL, int optR) {
 
     int mid = (L + R) >> 1, savek = optL;
     dp[i][mid] = inf;
-    FOR(k,optL,min(mid-1, optR)) {
+    FOR(k,optL,min(mid-1, optR)+1) {
         ll cur = dp[i-1][k] + getCost(k+1, mid);
         if (cur < dp[i][mid]) {
             dp[i][mid] = cur;
@@ -43,15 +43,15 @@ void compute(int i, int L, int R, int optL, int optR) {
 
 void solve() {
     cin >> n >> k;
-    FOR(i,1,n) FOR(j,1,n) {
+    FOR(i,1,n+1) FOR(j,1,n+1) {
         cin >> cost[i][j];
         cost[i][j] = cost[i-1][j] + cost[i][j-1] - cost[i-1][j-1] + cost[i][j];
     }
     dp[0][0] = 0;
-    FOR(i,1,n) dp[0][i] = inf;
+    FOR(i,1,n+1) dp[1][i] = inf;
 
-    FOR(i,1,k) {
-        compute(i, 1, n, 0, n);
+    FOR(i,2,k+1) {
+        compute(i, 1, n, 1, n);
     }
     cout << dp[k][n] / 2 << endl;
 }

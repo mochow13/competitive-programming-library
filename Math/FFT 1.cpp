@@ -1,87 +1,94 @@
-/*
-FFT is used for fast multiplication.
-Main Functionality : mult(a,b)
-Parameter : vector<int>a, vector<int> b (Representing a polynomial where a[3]
-contains co-efficient of the polynomial of degree 3)
-Output : The polynomial a*b
-*/ 
+const int MAXN = (1 << 21); // May not need to be changed
 
-typedef complex<double> Complex;
- 
-void fft(vector<Complex> & a, bool inv) 
+struct complex_base
 {
-    int n = (int)a.size();
- 
-    for (int i = 1, j = 0; i<n; ++i) 
+    double x, y;
+    complex_base(double _x = 0, double _y = 0) { x = _x; y = _y; }
+    friend complex_base operator-(const complex_base &a, const complex_base &b) { return complex_base(a.x - b.x, a.y - b.y); }
+    friend complex_base operator+(const complex_base &a, const complex_base &b) { return complex_base(a.x + b.x, a.y + b.y); }
+    friend complex_base operator*(const complex_base &a, const complex_base &b) { return complex_base(a.x * b.x - a.y * b.y, a.y * b.x + b.y * a.x); }
+    friend void operator/=(complex_base &a, const double &P) { a.x /= P; a.y /= P; }
+};
+
+int bit_rev[MAXN];
+
+void fft(complex_base *a, int lg)
+{
+    int n = (1 << lg);
+    for (int i = 1; i < n; i++)
     {
-        int bit = n >> 1;
-        for (; j >= bit; bit >>= 1)
-            j -= bit;
-        j += bit;
-        if (i < j)
-            swap(a[i], a[j]);
+        bit_rev[i] = (bit_rev[i >> 1] >> 1) | ((i & 1) << (lg - 1));
+        if (bit_rev[i] < i) swap(a[i], a[bit_rev[i]]);
     }
- 
-    for (int len = 2; len <= n; len <<= 1) 
+
+    for (int len = 2; len <= n; len <<= 1)
     {
-        double ang = 2 * PI / len * (inv ? -1 : 1);
-        Complex wlen(cos(ang), sin(ang));
-        for (int i = 0; i<n; i += len) 
-        {
-            Complex w(1);
-            for (int j = 0; j<len / 2; ++j) 
+        double ang = 2 * PI / len;
+        complex_base w(1, 0), wn(cos(ang), sin(ang));
+        for (int j = 0; j < (len >> 1); j++, w = w * wn)
+            for (int i = 0; i < n; i += len)
             {
-                Complex u = a[i + j], v = a[i + j + len / 2] * w;
+                complex_base u = a[i + j], v = w * a[i + j + (len >> 1)];
                 a[i + j] = u + v;
-                a[i + j + len / 2] = u - v;
-                w *= wlen;
+                a[i + j + (len >> 1)] = u - v;
             }
-        }
     }
-    if(inv)
-    for (int i = 0; i<n; ++i)
+}
+
+void inv_fft(complex_base *a, int lg)
+{
+    int n = (1 << lg);
+    for (int i = 1; i < n; i++)
+    {
+        bit_rev[i] = (bit_rev[i >> 1] >> 1) | ((i & 1) << (lg - 1));
+        if (bit_rev[i] < i) swap(a[i], a[bit_rev[i]]);
+    }
+
+    for (int len = 2; len <= n; len <<= 1)
+    {
+        double ang = -2 * PI / len;
+        complex_base w(1, 0), wn(cos(ang), sin(ang));
+
+        for (int j = 0; j < (len >> 1); j++, w = w * wn)
+            for (int i = 0; i < n; i += len)
+            {
+                complex_base u = a[i + j], v = w * a[i + j + (len >> 1)];
+                a[i + j] = u + v;
+                a[i + j + (len >> 1)] = u - v;
+            }
+    }
+
+    for (int i = 0; i < n; i++)
         a[i] /= n;
- 
 }
- 
-vector<int> mult(vector<int>& a, vector<int>& b) 
+
+complex_base A[MAXN], B[MAXN];
+
+vector<ll> mult(vector<ll> a, vector<ll> b)
 {
- 
-    vector<Complex> fa(a.begin(), a.end()), fb(b.begin(), b.end());
-    size_t n = 1;
-    while (n < max(a.size(), b.size()))  n <<= 1;
-    n <<= 1;
-    fa.resize(n), fb.resize(n);
- 
-    fft(fa, false), fft(fb, false);
-    for (size_t i = 0; i<n; ++i)
-        fa[i] *= fb[i];
-    fft(fa, true);
- 
-    vector<int> res;
-    res.resize(n);
-    for (size_t i = 0; i<n; ++i)
-        res[i] = int(fa[i].real() + 0.5);
-    return res;
-}
- 
- 
-vector<int> squ(vector<int>& a) 
-{
-    vector<Complex> fa(a.begin(), a.end()), fb(a.begin(), a.end());
-    size_t n = 1;
-    while (n < a.size())  n <<= 1;
-    n <<= 1;
-    fa.resize(n), fb.resize(n);
- 
-    fft(fa, false); fb = fa;
-    for (size_t i = 0; i < n; ++i)
-        fa[i] *= fb[i];
-    fft(fa, true);
- 
-    vector<int> res;
-    res.resize(n);
-    for (size_t i = 0; i < n; ++i)
-        res[i] = int(fa[i].real() + 0.5);
-    return res;
+    if (a.size() * b.size() <= 256)
+    {
+        vector<ll> ans(a.size() + b.size(), 0);
+        for (int i = 0; i < (int)a.size(); i++)
+            for (int j = 0; j < (int)b.size(); j++)
+                ans[i + j] += a[i] * b[j];
+
+        return ans;
+    }
+
+    int lg = 0; while ((1 << lg) < (a.size() + b.size())) ++lg;
+    for (int i = 0; i < (1 << lg); i++) A[i] = B[i] = complex_base(0, 0);
+    for (int i = 0; i < (int)a.size(); i++) A[i] = complex_base(a[i], 0);
+    for (int i = 0; i < (int)b.size(); i++) B[i] = complex_base(b[i], 0);
+
+    fft(A, lg); fft(B, lg);
+    for (int i = 0; i < (1 << lg); i++)
+        A[i] = A[i] * B[i];
+    inv_fft(A, lg);
+
+    vector<ll> ans(a.size() + b.size(), 0);
+    for (int i = 0; i < (int)ans.size(); i++)
+        ans[i] = (int)(A[i].x + 0.5);
+
+    return ans;
 }

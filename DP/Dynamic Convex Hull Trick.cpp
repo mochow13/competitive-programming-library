@@ -2,6 +2,7 @@
 // Used in problem CS Squared Ends
 // Problem: A is an array of n integers. The cost of subarray A[l...r] is (A[l]-A[r])^2. Partition
 // the array into K subarrays having a minimum total cost
+// In case of initializing 'ans', check if 1e18 is enough. Might need LLONG_MAX
 
 const ll is_query = -(1LL<<62);
 struct Line {

@@ -1,3 +1,4 @@
+// g++ -O2 -static -std=c++11 source.cpp
 #pragma comment(linker, "/stack:200000000")
 #pragma GCC optimize("unroll-loops")
 
