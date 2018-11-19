@@ -2,7 +2,7 @@
 
 This repository contains templates, algorithms and data structures implemented and collected for programming contests. Most of them are at least used once to check correctness, still it is **strongly recommended to test for yourself**.
 
-# Table of contents
+# Table of Contents
 1. [Dynamic Programming](#dp)
 2. [Data Structures](#ds)
 3. [Game](#game)
