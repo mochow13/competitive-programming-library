@@ -1,5 +1,7 @@
 # Competitive Programming Library
 
+From OKNOTOK.
+
 This repository contains templates, algorithms and data structures implemented and collected for programming contests. Most of them are at least used once to check correctness, still it is **strongly recommended to test for yourself**.
 
 # Table of Contents
